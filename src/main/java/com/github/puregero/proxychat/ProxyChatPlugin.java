@@ -28,7 +28,11 @@ public class ProxyChatPlugin extends JavaPlugin implements Listener {
             boolean remove = recipient.getWorld() != player.getWorld() || recipient.getLocation().distanceSquared(player.getLocation()) > distance * distance;
 
             if (remove && "true".equals(MultiLib.getPersistentData(recipient, "proxychat.seeallchat"))) {
-                recipient.sendMessage(ChatColor.GRAY + String.format(event.getFormat(), event.getPlayer().getName(), event.getMessage()));
+                String format = String.format(event.getFormat(), event.getPlayer().getName(), event.getMessage());
+                for (int i = 0; (i = format.indexOf('§', i + 1)) >= 0; ) {
+                    format = format.substring(0, i) + ChatColor.GRAY + format.substring(i + 2);
+                }
+                recipient.sendMessage(ChatColor.GRAY + format);
             }
 
             return remove;
