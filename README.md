@@ -3,8 +3,8 @@ MultiPaper-compatible proxy chat Bukkit plugin.
 
 ## Commands
 
-`/setproximitydistance`
+`/setproximitydistance`  
 Change the proximity chat distance (default 50).
 
-`/seeallchat`
+`/seeallchat`  
 Bypass the proxy chat filter and see all chat messages.
