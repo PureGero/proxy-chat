@@ -1,0 +1,18 @@
+name: ${project.name}
+version: ${project.version}
+description: ${project.description}
+main: com.github.puregero.proxychat.ProxyChatPlugin
+author: PureGero
+api-version: 1.18
+commands:
+  seeallchat:
+    description: Toggle whether you can see chat outside your distance
+    permission: proxychat.seeallchat
+  setproximitydistance:
+    description: Set the proximity distance
+    permission: proxychat.setproximitydistance
+permissions:
+  proxychat.seeallchat:
+    default: op
+  proxychat.setproximitydistance:
+    default: op
