@@ -2,6 +2,7 @@ package com.github.puregero.proxychat;
 
 import com.github.puregero.multilib.MultiLib;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -25,7 +26,7 @@ public class ProxyChatPlugin extends JavaPlugin implements Listener {
     public void onChat(AsyncPlayerChatEvent event) {
         Player player = event.getPlayer();
         event.getRecipients().removeIf(recipient -> {
-            boolean remove = recipient.getWorld() != player.getWorld() || recipient.getLocation().distanceSquared(player.getLocation()) > distance * distance;
+            boolean remove = recipient.getWorld() != player.getWorld() || horizontalDistanceSquared(recipient.getLocation(), player.getLocation()) > distance * distance;
 
             if (remove && "true".equals(MultiLib.getPersistentData(recipient, "proxychat.seeallchat"))) {
                 String format = String.format(event.getFormat(), event.getPlayer().getName(), event.getMessage());
@@ -37,6 +38,11 @@ public class ProxyChatPlugin extends JavaPlugin implements Listener {
 
             return remove;
         });
+    }
+
+    public double horizontalDistanceSquared(Location loc1, Location loc2) {
+        return (loc1.getX() - loc2.getX()) * (loc1.getX() - loc2.getX())
+                + (loc1.getZ() - loc2.getZ()) * (loc1.getZ() - loc2.getZ());
     }
 
     @EventHandler(ignoreCancelled = true)
