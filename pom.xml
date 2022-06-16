@@ -6,7 +6,7 @@
 
     <groupId>com.github.puregero</groupId>
     <artifactId>proxy-chat</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <description>Proximity Chat Bukkit plugin</description>
 
     <name>ProxyChat</name>
