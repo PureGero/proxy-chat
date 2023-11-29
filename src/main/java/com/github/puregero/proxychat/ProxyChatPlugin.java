@@ -1,6 +1,7 @@
 package com.github.puregero.proxychat;
 
 import com.github.puregero.multilib.MultiLib;
+import io.papermc.paper.event.player.AsyncChatEvent;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -8,7 +9,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -27,34 +27,38 @@ public class ProxyChatPlugin extends JavaPlugin implements Listener {
         return "true".equals(MultiLib.getPersistentData(player, "proxychat.seeallchat"));
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-    public void onChatGhosts(AsyncPlayerChatEvent event) {
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onChatGhosts(AsyncChatEvent event) {
         Player player = event.getPlayer();
         if (player.getGameMode() == GameMode.SPECTATOR) {
-            String format = String.format(event.getFormat(), event.getPlayer().getName(), event.getMessage());
-            for (int i = 0; (i = format.indexOf('§', i + 1)) >= 0; ) {
-                format = format.substring(0, i) + ChatColor.GRAY + format.substring(i + 2);
-            }
-            event.setFormat(ChatColor.GRAY + format);
-
-            event.getRecipients().removeIf(recipient -> recipient.getGameMode() != GameMode.SPECTATOR && !canSeeAllChat(recipient));
+            event.renderer(new DarkeningChatRenderer(event.renderer(), 0.66, (source, viewer) -> true));
+            event.viewers().removeIf(viewer -> {
+                if (viewer instanceof Player recipient) {
+                    return recipient.getGameMode() != GameMode.SPECTATOR && !canSeeAllChat(recipient);
+                } else {
+                    return false;
+                }
+            });
         }
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    public void onChatDistance(AsyncPlayerChatEvent event) {
+    public void onChatDistance(AsyncChatEvent event) {
         Player player = event.getPlayer();
-        event.getRecipients().removeIf(recipient -> {
-            boolean remove = recipient.getWorld() != player.getWorld() || horizontalDistanceSquared(recipient.getLocation(), player.getLocation()) > distance * distance;
 
-            if (remove && canSeeAllChat(recipient)) {
-                String format = String.format(event.getFormat(), event.getPlayer().getName(), event.getMessage());
-                for (int i = 0; (i = format.indexOf('§', i + 1)) >= 0; ) {
-                    format = format.substring(0, i) + ChatColor.DARK_GRAY + format.substring(i + 2);
-                }
-                recipient.sendMessage(ChatColor.DARK_GRAY + format);
+        event.renderer(new DarkeningChatRenderer(event.renderer(), 0.33, (source, viewer) -> {
+            if (viewer instanceof Player recipient) {
+                return horizontalDistanceSquared(recipient.getLocation(), source.getLocation()) > distance * distance;
+            } else {
+                return false;
             }
+        }));
 
+        event.viewers().removeIf(viewer -> {
+            boolean remove = false;
+            if (viewer instanceof Player recipient && !canSeeAllChat(recipient)) {
+                remove = recipient.getWorld() != player.getWorld() || horizontalDistanceSquared(recipient.getLocation(), player.getLocation()) > distance * distance;
+            }
             return remove;
         });
     }
