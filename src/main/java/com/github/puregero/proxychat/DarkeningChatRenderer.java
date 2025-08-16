@@ -30,12 +30,10 @@ public class DarkeningChatRenderer implements ChatRenderer {
         Component component = superRenderer.render(source, sourceDisplayName, message, viewer);
 
         if (shouldDarken.apply(source, viewer)) {
-            System.out.println(component);
             if (component.color() == null) {
                 component = component.color(NamedTextColor.WHITE);
             }
             component = recursivelyDarken(component);
-            System.out.println(component);
         }
 
         return component;

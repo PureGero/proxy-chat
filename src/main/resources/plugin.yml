@@ -4,6 +4,7 @@ description: ${project.description}
 main: com.github.puregero.proxychat.ProxyChatPlugin
 author: PureGero
 api-version: 1.18
+folia-support: true
 commands:
   seeallchat:
     description: Toggle whether you can see chat outside your distance
