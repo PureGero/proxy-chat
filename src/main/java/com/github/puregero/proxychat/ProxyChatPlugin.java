@@ -89,7 +89,7 @@ public class ProxyChatPlugin extends JavaPlugin implements Listener {
                 return remove;
             }
 
-            if (canSeeAllChat(player)) {
+            if (canSeeAllChat(recipient)) {
                 return remove;
             }
 
