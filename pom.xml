@@ -6,7 +6,7 @@
 
     <groupId>com.github.puregero</groupId>
     <artifactId>proxy-chat</artifactId>
-    <version>1.0.4</version>
+    <version>1.0.5</version>
     <description>Proximity Chat Bukkit plugin</description>
 
     <name>ProxyChat</name>
@@ -34,6 +34,10 @@
             <id>clojars</id>
             <url>https://repo.clojars.org</url>
         </repository>
+        <repository>
+            <id>sk89q-repo</id>
+            <url>https://maven.enginehub.org/repo/</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -53,6 +57,12 @@
             <artifactId>multilib</artifactId>
             <version>1.2.5</version>
             <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.sk89q.worldguard</groupId>
+            <artifactId>worldguard-bukkit</artifactId>
+            <version>7.0.11-SNAPSHOT</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 
